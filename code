@@ -1,0 +1,41 @@
+#include <kipr/botball.h>
+//2-7-19
+//PLEASE NOTE: This code only works if you have the channels on your Wallaby set up as we did
+
+int main()
+{
+    printf("Hello World\n");
+    int redchannel = 0;
+    int yellowchannel = 1;
+    camera_open_black();
+    while(!camera_update()) {
+        printf("No camera\n");
+        camera_close();
+        msleep(100);
+        camera_open_black();
+        msleep(100);
+    }
+    
+    while(1) {
+        camera_update();
+        point2 redcenter = get_object_center(redchannel, 0);
+        point2 yellowcenter = get_object_center(yellowchannel, 0);
+        while(!camera_update()) {
+            camera_update();
+            msleep(10);
+        }
+
+        if ((redcenter.x < yellowcenter.x+16 && redcenter.x > yellowcenter.x-16) && 
+            (redcenter.y < yellowcenter.y+12 && redcenter.y > yellowcenter.y-12))
+            {
+            printf("FIRE!\n");
+        } else {
+            printf("All clear return to class\n");
+        }
+        printf("%d\n", redcenter.x);
+        printf("%d\n", yellowcenter.x);
+        msleep(100);
+    }
+    
+    return 0;
+}
